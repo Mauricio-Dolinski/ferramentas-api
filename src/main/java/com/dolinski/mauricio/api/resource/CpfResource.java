@@ -13,8 +13,8 @@ public class CpfResource {
     
     @GET
     public String gerar() {
-        Cpf cpf = new Cpf();
-        return cpf.gerar();
+        Documento documento = new Cpf();
+        return documento.gerar();
     }
 
     
