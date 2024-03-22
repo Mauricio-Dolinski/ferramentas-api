@@ -12,6 +12,7 @@ import jakarta.ws.rs.Path;
 public class CpfResource {
     
     @GET
+    @Path("/gerar")
     public String gerar() {
         Documento documento = new Cpf();
         return documento.gerar();
@@ -19,8 +20,10 @@ public class CpfResource {
 
     
     @POST
+    @Path("/validar")
     public String validar(@FormParam("cpf") String numero) {
         Documento documento = new Cpf();
         return documento.validar(numero);
     }
 }
+
