@@ -13,4 +13,4 @@ API com ferramentas para validação e geração de documentos comuns no Brasil.
 
 # Swagger UI
 
-![](https://i.imgur.com/ePh8SZK.png)
+![](https://i.imgur.com/bPFzlW0.png)
