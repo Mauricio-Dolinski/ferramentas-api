@@ -9,8 +9,8 @@ import jakarta.ws.rs.core.Application;
 
 @OpenAPIDefinition(
     tags = {
-        @Tag(name="Gerar", description="Geração de números de documentos"),
-        @Tag(name="Validar", description="Validação de números de documentos")
+        @Tag(name="Gerador", description="Geração de números de documentos"),
+        @Tag(name="Validador", description="Validação de números de documentos")
     },
     info = @Info(
         title="Ferramentas API",

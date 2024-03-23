@@ -15,12 +15,14 @@ public class CpfResource {
     private Documento documento = new Cpf();
     
     @Tag(name="Gerar")
+    @Path("/gerar")
     @GET
     public String gerar() {
         return documento.gerar();
     }
     
     @Tag(name="Validar")
+    @Path("/validar")
     @POST
     public String validar(@FormParam("cpf") String numero) {
         return documento.validar(numero);
