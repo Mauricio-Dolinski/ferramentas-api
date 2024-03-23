@@ -4,7 +4,30 @@ public class Cpf implements Documento{
     
     @Override
     public String gerar() {
-        return "gerado";
+        int[] digitos = new int[11];
+		int soma1 = 0;
+		int soma2 = 0;
+		String gerado = "";
+
+        for (int i = 0; i < 9; i++) {
+            digitos[i] = (int) (Math.random() * 9);
+			soma1 += digitos[i] * (i+1);
+			soma2 += digitos[i] * i;
+        }
+
+		digitos[9] = soma1 % 11;
+		if (digitos[9] == 10) digitos[9] = 0;
+
+		soma2 += digitos[9] * 9;
+
+		digitos[10] = soma2 % 11;
+		if (digitos[10] == 10) digitos[9] = 0;
+
+		for (int digito : digitos) {
+			gerado += "" + digito;
+		}
+ 
+        return gerado;
     }
 
     @Override
@@ -13,10 +36,10 @@ public class Cpf implements Documento{
         cpf = cpf.replaceAll("\\.", "");
         cpf = cpf.replaceAll("-", "");
         if (cpf.length() == 10 && cpf.matches("[0-9]+")){
-          cpf = "0" + cpf;
+            cpf = "0" + cpf;
         }
         if (cpf.length() != 11 || !cpf.matches("[0-9]+")){
-          return "CPF não é válido, deve conter 11 numeros";
+            return "CPF não é válido, deve conter 11 numeros";
         }
         else {
 
@@ -29,16 +52,16 @@ public class Cpf implements Documento{
             d1 = d2 = 0;
             digito1 = digito2 = resto = 0;
 
-            for (int nCount = 1; nCount < cpf.length() - 1; nCount++) {
-              digitoCPF = Integer.valueOf(cpf.substring(nCount - 1, nCount)).intValue();
+            for (int i = 1; i < cpf.length() - 1; i++) {
+                digitoCPF = Integer.valueOf(cpf.substring(i - 1, i)).intValue();
 
-              // multiplique a ultima casa por 2 a seguinte por 3 a seguinte por 4
-              // e assim por diante.
-              d1 = d1 + (11 - nCount) * digitoCPF;
+                // multiplique a ultima casa por 2 a seguinte por 3 a seguinte por 4
+                // e assim por diante.
+                d1 = d1 + (11 - i) * digitoCPF;
 
-              // para o segundo digito repita o procedimento incluindo o primeiro
-              // digito calculado no passo anterior.
-              d2 = d2 + (12 - nCount) * digitoCPF;
+                // para o segundo digito repita o procedimento incluindo o primeiro
+                // digito calculado no passo anterior.
+                d2 = d2 + (12 - i) * digitoCPF;
             };
 
             // Primeiro resto da divisão por 11.
@@ -47,9 +70,9 @@ public class Cpf implements Documento{
             // Se o resultado for 0 ou 1 o digito é 0 caso contrário o digito é 11
             // menos o resultado anterior.
             if (resto < 2)
-              digito1 = 0;
+                digito1 = 0;
             else
-              digito1 = 11 - resto;
+                digito1 = 11 - resto;
 
             d2 += 2 * digito1;
 
@@ -59,9 +82,9 @@ public class Cpf implements Documento{
             // Se o resultado for 0 ou 1 o digito é 0 caso contrário o digito é 11
             // menos o resultado anterior.
             if (resto < 2)
-              digito2 = 0;
+                digito2 = 0;
             else
-              digito2 = 11 - resto;
+                digito2 = 11 - resto;
 
             // Digito verificador do CPF que está sendo validado.
             String nDigVerific = cpf.substring(cpf.length() - 2, cpf.length());
