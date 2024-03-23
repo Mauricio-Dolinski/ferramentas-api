@@ -80,6 +80,11 @@ public class Cpf implements Documento{
                 return "CPF não é válido";
             }
         }
-        return "CPF é válido";
+        cpf = cpf.substring(0, 3) + "." + 
+              cpf.substring(4, 7) + "." +
+              cpf.substring(8, 11) + "-" +
+              cpf.substring(12);
+              
+        return "CPF " + cpf + " é válido";
     }
 }
