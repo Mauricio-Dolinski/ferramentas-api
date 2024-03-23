@@ -14,14 +14,14 @@ import jakarta.ws.rs.Path;
 public class CpfResource {
     private Documento documento = new Cpf();
     
-    @Tag(name="Gerar")
+    @Tag(name="Gerador")
     @Path("/gerar")
     @GET
     public String gerar() {
         return documento.gerar();
     }
     
-    @Tag(name="Validar")
+    @Tag(name="Validador")
     @Path("/validar")
     @POST
     public String validar(@FormParam("cpf") String numero) {
