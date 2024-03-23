@@ -14,6 +14,7 @@ import jakarta.ws.rs.core.Application;
     },
     info = @Info(
         title="Ferramentas API",
+        description="API com ferramentas para validação e geração de documentos comuns no Brasil.",
         version = "1.0.0",
         contact = @Contact(
             name = "Mauricio Dolinski",
