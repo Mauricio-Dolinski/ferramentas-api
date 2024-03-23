@@ -1,6 +1,6 @@
 # Ferramentas API (Back-End)
 
-API com algumas ferramentas como validação e geração de documentos comuns no Brasil.
+API com ferramentas para validação e geração de documentos comuns no Brasil.
 
 ### Resumo
 
