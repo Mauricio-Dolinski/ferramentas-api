@@ -13,7 +13,12 @@ public class Cpf implements Documento{
         cpf = cpf.replaceAll("\\.", "");
         cpf = cpf.replaceAll("-", "");
         if (cpf.length() != 11 || !cpf.matches("[0-9]+")){
+          if (cpf.length() == 10 && cpf.matches("[0-9]+")){
+            cpf = "0" + cpf;
+          }
+          else {
             return "CPF não é válido, deve conter 11 numeros";
+          }
         }
         else {
 
@@ -75,8 +80,6 @@ public class Cpf implements Documento{
                 return "CPF não é válido";
             }
         }
-
         return "CPF é válido";
-
     }
 }
