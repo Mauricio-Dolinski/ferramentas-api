@@ -1,4 +1,4 @@
-package com.dolinski.mauricio.api.resource;
+package com.dolinski.mauricio.api.controller;
 
 import io.quarkus.test.junit.QuarkusTest;
 
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 import static io.restassured.RestAssured.*;
 
 @QuarkusTest
-public class CpfResourceTest {
+public class CpfControllerTest {
 
     @Test
     public void deveriaGerarCpf() {
@@ -17,7 +17,7 @@ public class CpfResourceTest {
                 .when().get("/cpf/gerar")
                 .then()
                 .statusCode(200)
-                .assertThat().body(containsString("gerado"));
+                .assertThat().body(containsString("-"));
     }
 
     @Test
@@ -27,7 +27,7 @@ public class CpfResourceTest {
                 .when().post("/cpf/validar")
                 .then()
                 .statusCode(200)
-                .assertThat().body(containsString("CPF 123.456.789-09 é válido"));
+                .assertThat().body(containsString("CPF 123.456.789-09 é válido."));
     }
 
     @Test
@@ -37,7 +37,7 @@ public class CpfResourceTest {
                 .when().post("/cpf/validar")
                 .then()
                 .statusCode(200)
-                .assertThat().body(containsString("CPF 123.456.789-09 é válido"));
+                .assertThat().body(containsString("CPF 123.456.789-09 é válido."));
     }
 
     @Test
@@ -47,37 +47,37 @@ public class CpfResourceTest {
                 .when().post("/cpf/validar")
                 .then()
                 .statusCode(200)
-                .assertThat().body(containsString("CPF 018.457.127-81 é válido"));
+                .assertThat().body(containsString("CPF 018.457.127-81 é válido."));
     }
 
     @Test
     public void naoDeveriaValidarCpf() {
         given()
-                .param("cpf", "10987654321")
+                .param("cpf", "12345678910")
                 .when().post("/cpf/validar")
                 .then()
                 .statusCode(200)
-                .assertThat().body(containsString("CPF não é válido"));
+                .assertThat().body(containsString("CPF não é válido, digito verificador deveria ser 09."));
     }
 
     @Test
     public void naoDeveriaValidarCpf2() {
         given()
-                .param("cpf", "10987654321231231")
+                .param("cpf", "1098765432123456")
                 .when().post("/cpf/validar")
                 .then()
-                .statusCode(200)
-                .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros"));
+                .statusCode(400)
+                .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros."));
     }
 
     @Test
     public void naoDeveriaValidarCpf3() {
         given()
-                .param("cpf", "231231")
+                .param("cpf", "123456")
                 .when().post("/cpf/validar")
                 .then()
-                .statusCode(200)
-                .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros"));
+                .statusCode(400)
+                .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros."));
     }
 
     @Test
@@ -86,7 +86,7 @@ public class CpfResourceTest {
                 .param("cpf", "abcdefghijk")
                 .when().post("/cpf/validar")
                 .then()
-                .statusCode(200)
-                .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros"));
+                .statusCode(400)
+                .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros."));
     }
 }

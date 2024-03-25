@@ -1,4 +1,4 @@
-package com.dolinski.mauricio.api.entity;
+package com.dolinski.mauricio.api;
 
 import org.eclipse.microprofile.openapi.annotations.info.Contact;
 import org.eclipse.microprofile.openapi.annotations.info.Info;
