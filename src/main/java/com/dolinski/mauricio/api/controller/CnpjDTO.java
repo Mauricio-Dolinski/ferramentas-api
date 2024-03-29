@@ -28,7 +28,7 @@ public class CnpjDTO implements DocumentoDTO {
 		String cnpj = this.numero;
 
         //parse
-        
+
         this.numero = cnpj;
     }
-}
+} 

@@ -37,4 +37,4 @@ public class CnpjController {
             return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, e.getMessage()).build();
         }
     }
-}
+} 

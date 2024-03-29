@@ -29,4 +29,4 @@ public class CnpjControllerTest {
                 .statusCode(200)
                 .assertThat().body(containsString("valido"));
     }
-}
+} 

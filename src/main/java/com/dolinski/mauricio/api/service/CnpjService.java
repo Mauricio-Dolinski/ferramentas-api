@@ -15,5 +15,4 @@ public class CnpjService implements DocumentoService {
     public String validar(DocumentoDTO dto) throws ValidationException {
         return "valido";
     }
-    
-}
+} 
