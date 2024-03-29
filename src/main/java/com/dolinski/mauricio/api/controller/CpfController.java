@@ -4,8 +4,8 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestResponse;
 import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
-import com.dolinski.mauricio.api.service.Cpf;
-import com.dolinski.mauricio.api.service.Documento;
+import com.dolinski.mauricio.api.service.CpfService;
+import com.dolinski.mauricio.api.service.DocumentoService;
 
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.GET;
@@ -16,7 +16,7 @@ import jakarta.xml.bind.ValidationException;
 
 @Path("/cpf")
 public class CpfController {
-    private Documento documento = new Cpf();
+    private DocumentoService documento = new CpfService();
     
     @Tag(name="Gerador")
     @Path("/gerar")

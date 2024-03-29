@@ -2,7 +2,7 @@ package com.dolinski.mauricio.api.service;
 
 import jakarta.xml.bind.ValidationException;
 
-public class Cpf implements Documento{
+public class CpfService implements DocumentoService{
 
 	private int digito;
 	private int[] soma = new int[2];
