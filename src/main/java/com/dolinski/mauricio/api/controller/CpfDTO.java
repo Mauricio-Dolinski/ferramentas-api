@@ -1,8 +1,8 @@
 package com.dolinski.mauricio.api.controller;
 
+import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.FormParam;
-import jakarta.xml.bind.ValidationException;
 
 public class CpfDTO implements DocumentoDTO {
     @NotBlank(message = "Campo cpf não pode ser vazio")

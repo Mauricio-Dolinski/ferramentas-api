@@ -2,7 +2,9 @@ package com.dolinski.mauricio.api.service;
 
 import com.dolinski.mauricio.api.controller.DocumentoDTO;
 
-import jakarta.xml.bind.ValidationException;
+import jakarta.validation.ValidationException;
+
+
 
 public interface DocumentoService {
     public String gerar();

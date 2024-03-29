@@ -8,11 +8,12 @@ import com.dolinski.mauricio.api.service.CpfService;
 import com.dolinski.mauricio.api.service.DocumentoService;
 
 import jakarta.validation.Valid;
+import jakarta.validation.ValidationException;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.xml.bind.ValidationException;
+
 
 
 @Path("/cpf")

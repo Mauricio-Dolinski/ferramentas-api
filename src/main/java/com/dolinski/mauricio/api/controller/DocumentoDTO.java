@@ -1,6 +1,6 @@
 package com.dolinski.mauricio.api.controller;
 
-import jakarta.xml.bind.ValidationException;
+import jakarta.validation.ValidationException;
 
 public interface DocumentoDTO {
     public String getNumero();
