@@ -7,7 +7,8 @@ import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 import com.dolinski.mauricio.api.service.CpfService;
 import com.dolinski.mauricio.api.service.DocumentoService;
 
-import jakarta.ws.rs.FormParam;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -28,9 +29,9 @@ public class CpfController {
     @Tag(name="Validador")
     @Path("/validar")
     @POST
-    public RestResponse<String> validar(@FormParam("cpf") String numero) {
+    public RestResponse<String> validar(@Valid @BeanParam CpfDTO dto) {
         try {
-            return ResponseBuilder.ok(documento.validar(numero)).build();
+            return ResponseBuilder.ok(documento.validar(dto)).build();
         } catch (ValidationException e) {
             return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, e.getMessage()).build();
         }

@@ -1,5 +1,7 @@
 package com.dolinski.mauricio.api.service;
 
+import com.dolinski.mauricio.api.controller.DocumentoDTO;
+
 import jakarta.xml.bind.ValidationException;
 
 public class CpfService implements DocumentoService{
@@ -30,9 +32,10 @@ public class CpfService implements DocumentoService{
     }
 
     @Override
-    public String validar(String cpf) throws ValidationException {
-        
-        cpf = parse(cpf);
+    public String validar(DocumentoDTO dto) throws ValidationException {
+
+        dto.parse();
+        String cpf = dto.getNumero();
 
         int[] digitoVerificador = new int[2];
         int resto = 0;
@@ -70,25 +73,5 @@ public class CpfService implements DocumentoService{
                cpf.substring(6, 9) + "-" +
                cpf.substring(9);
 		return cpf;
-	}
-
-    private String parse(String cpf) throws ValidationException{
-		cpf = cpf.trim();
-        if (cpf.length() > 14) {
-            throw new ValidationException("CPF não é válido, deve conter 11 numeros.");
-        }
-           
-        cpf = cpf.replaceAll("\\.", "");
-        cpf = cpf.replaceAll("-", "");
-
-        if (cpf.length() == 10){
-            cpf = "0" + cpf;
-        }
-
-        if (cpf.length() != 11 || !cpf.matches("[0-9]+")){
-            throw new ValidationException("CPF não é válido, deve conter 11 numeros.");
-        }
-
-        return cpf;
 	}
 }
