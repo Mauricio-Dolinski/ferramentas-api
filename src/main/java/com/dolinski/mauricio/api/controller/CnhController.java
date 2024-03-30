@@ -30,7 +30,7 @@ public class CnhController {
     @Tag(name="Validador")
     @Path("/validar")
     @POST
-    public RestResponse<String> validar(@Valid @BeanParam CnpjDTO dto) {
+    public RestResponse<String> validar(@Valid @BeanParam CnhDTO dto) {
         try {
             return ResponseBuilder.ok(documento.validar(dto)).build();
         } catch (ValidationException e) {

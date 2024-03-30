@@ -25,10 +25,10 @@ public class CnhDTO implements DocumentoDTO {
     }
 
     public void parse() throws ValidationException {
-		String cnpj = this.numero;
+		String cnh = this.numero;
 
         //parse
 
-        this.numero = cnpj;
+        this.numero = cnh;
     }
 } 

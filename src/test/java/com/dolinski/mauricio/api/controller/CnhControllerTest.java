@@ -12,7 +12,7 @@ import static io.restassured.RestAssured.*;
 public class CnhControllerTest {
 
     @Test
-    public void deveriaGerarCnpj() {
+    public void deveriaGerarCnh() {
         given()
                 .when().get("/cnh/gerar")
                 .then()
@@ -21,7 +21,7 @@ public class CnhControllerTest {
     }
 
     @Test
-    public void deveriaValidarCnpj() {
+    public void deveriaValidarCnh() {
         given()
                 .param("cnh", "123")
                 .when().post("/cnh/validar")
