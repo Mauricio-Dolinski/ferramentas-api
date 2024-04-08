@@ -14,7 +14,7 @@ public class CpfControllerTest {
     @Test
     public void deveriaGerarCpf() {
         given()
-                .when().get("/cpf/gerar")
+                .when().get("/cpf")
                 .then()
                 .statusCode(200)
                 .assertThat().body(containsString("-"));
@@ -24,7 +24,7 @@ public class CpfControllerTest {
     public void deveriaValidarCpf() {
         given()
                 .param("cpf", "123.456.789-09")
-                .when().post("/cpf/validar")
+                .when().post("/cpf")
                 .then()
                 .statusCode(200)
                 .assertThat().body(containsString("CPF 123.456.789-09 é válido."));
@@ -34,7 +34,7 @@ public class CpfControllerTest {
     public void deveriaValidarCpf2() {
         given()
                 .param("cpf", "12345678909")
-                .when().post("/cpf/validar")
+                .when().post("/cpf")
                 .then()
                 .statusCode(200)
                 .assertThat().body(containsString("CPF 123.456.789-09 é válido."));
@@ -44,7 +44,7 @@ public class CpfControllerTest {
     public void deveriaValidarCpf3() {
         given()
                 .param("cpf", "18.457.127-81")
-                .when().post("/cpf/validar")
+                .when().post("/cpf")
                 .then()
                 .statusCode(200)
                 .assertThat().body(containsString("CPF 018.457.127-81 é válido."));
@@ -54,7 +54,7 @@ public class CpfControllerTest {
     public void naoDeveriaValidarCpf() {
         given()
                 .param("cpf", "12345678910")
-                .when().post("/cpf/validar")
+                .when().post("/cpf")
                 .then()
                 .statusCode(200)
                 .assertThat().body(containsString("CPF não é válido, digito verificador deveria ser 09."));
@@ -64,7 +64,7 @@ public class CpfControllerTest {
     public void naoDeveriaValidarCpf2() {
         given()
                 .param("cpf", "1098765432123456")
-                .when().post("/cpf/validar")
+                .when().post("/cpf")
                 .then()
                 .statusCode(400)
                 .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros."));
@@ -74,7 +74,7 @@ public class CpfControllerTest {
     public void naoDeveriaValidarCpf3() {
         given()
                 .param("cpf", "123456")
-                .when().post("/cpf/validar")
+                .when().post("/cpf")
                 .then()
                 .statusCode(400)
                 .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros."));
@@ -84,7 +84,7 @@ public class CpfControllerTest {
     public void naoDeveriaValidarCpf4() {
         given()
                 .param("cpf", "abcdefghijk")
-                .when().post("/cpf/validar")
+                .when().post("/cpf")
                 .then()
                 .statusCode(400)
                 .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros."));

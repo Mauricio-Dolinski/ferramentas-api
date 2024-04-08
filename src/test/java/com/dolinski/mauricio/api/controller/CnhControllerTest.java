@@ -14,7 +14,7 @@ public class CnhControllerTest {
     @Test
     public void deveriaGerarCnh() {
         given()
-                .when().get("/cnh/gerar")
+                .when().get("/cnh")
                 .then()
                 .statusCode(200)
                 .assertThat().body(containsString("gerado"));
@@ -24,7 +24,7 @@ public class CnhControllerTest {
     public void deveriaValidarCnh() {
         given()
                 .param("cnh", "123")
-                .when().post("/cnh/validar")
+                .when().post("/cnh")
                 .then()
                 .statusCode(200)
                 .assertThat().body(containsString("valido"));

@@ -1,12 +1,12 @@
-package com.dolinski.mauricio.api.controller;
+package com.dolinski.mauricio.api.dto;
 
 import jakarta.validation.ValidationException;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.FormParam;
 
-public class CnhDTO implements DocumentoDTO {
-    @NotBlank(message = "Campo cnh não pode ser vazio")
-    @FormParam("cnh")
+public class CnpjDTO implements DocumentoDTO {
+    @NotBlank(message = "Campo cnpj não pode ser vazio")
+    @FormParam("cnpj")
     String numero;
 
     public String getNumero() {
@@ -17,18 +17,18 @@ public class CnhDTO implements DocumentoDTO {
         this.numero = numero;
     }
 
-    public CnhDTO(String numero) {
+    public CnpjDTO(String numero) {
         this.numero = numero;
     }
 
-    public CnhDTO() {
+    public CnpjDTO() {
     }
 
     public void parse() throws ValidationException {
-		String cnh = this.numero;
+		String cnpj = this.numero;
 
         //parse
 
-        this.numero = cnh;
+        this.numero = cnpj;
     }
 } 

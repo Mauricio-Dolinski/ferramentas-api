@@ -14,7 +14,7 @@ public class CnpjControllerTest {
     @Test
     public void deveriaGerarCnpj() {
         given()
-                .when().get("/cnpj/gerar")
+                .when().get("/cnpj")
                 .then()
                 .statusCode(200)
                 .assertThat().body(containsString("gerado"));
@@ -24,7 +24,7 @@ public class CnpjControllerTest {
     public void deveriaValidarCnpj() {
         given()
                 .param("cnpj", "123")
-                .when().post("/cnpj/validar")
+                .when().post("/cnpj")
                 .then()
                 .statusCode(200)
                 .assertThat().body(containsString("valido"));

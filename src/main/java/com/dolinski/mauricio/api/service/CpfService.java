@@ -1,6 +1,10 @@
 package com.dolinski.mauricio.api.service;
 
-import com.dolinski.mauricio.api.controller.DocumentoDTO;
+import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
+
+import com.dolinski.mauricio.api.dto.DocumentoDTO;
+
+import org.jboss.resteasy.reactive.RestResponse;
 
 import jakarta.validation.ValidationException;
 
@@ -11,7 +15,7 @@ public class CpfService implements DocumentoService{
 	private int[] soma = new int[2];
     
     @Override
-    public String gerar() {
+    public RestResponse<String> gerar() {
 		String cpf = "";
         digito = soma[0] = soma[1] = 0;
 
@@ -29,13 +33,18 @@ public class CpfService implements DocumentoService{
 			if (i == 0) soma[1] += digito * 9;
 		}
  
-        return format(cpf);
+        return ResponseBuilder.ok(format(cpf)).build();
     }
 
     @Override
-    public String validar(DocumentoDTO dto) throws ValidationException {
+    public RestResponse<String> validar(DocumentoDTO dto) {
 
-        dto.parse();
+        try {
+            dto.parse();
+        } catch (ValidationException e) {
+            return ResponseBuilder.create(RestResponse.Status.BAD_REQUEST, e.getMessage()).build();
+        }
+
         String cpf = dto.getNumero();
 
         int[] digitoVerificador = new int[2];
@@ -60,12 +69,14 @@ public class CpfService implements DocumentoService{
         }
 
         resultado = String.valueOf(digitoVerificador[0]) + String.valueOf(digitoVerificador[1]);
+        String response = "";
         if (verificador.equals(resultado)){
-            return "CPF " + format(cpf) + " é válido.";
+            response = "CPF " + format(cpf) + " é válido.";
         }
         else{
-            return "CPF não é válido, digito verificador deveria ser " + resultado + ".";
+            response = "CPF não é válido, digito verificador deveria ser " + resultado + ".";
         }
+        return ResponseBuilder.ok(response).build();
     }
 
 	private String format(String cpf){

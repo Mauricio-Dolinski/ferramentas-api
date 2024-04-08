@@ -1,4 +1,4 @@
-package com.dolinski.mauricio.api.controller;
+package com.dolinski.mauricio.api.dto;
 
 import jakarta.validation.ValidationException;
 

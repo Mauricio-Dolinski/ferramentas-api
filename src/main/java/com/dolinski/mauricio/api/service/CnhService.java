@@ -1,18 +1,19 @@
 package com.dolinski.mauricio.api.service;
 
-import com.dolinski.mauricio.api.controller.DocumentoDTO;
+import org.jboss.resteasy.reactive.RestResponse;
+import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
-import jakarta.validation.ValidationException;
+import com.dolinski.mauricio.api.dto.DocumentoDTO;
 
 public class CnhService implements DocumentoService {
 
     @Override
-    public String gerar() {
-        return "gerado";
+    public RestResponse<String> gerar() {
+        return ResponseBuilder.ok("gerado").build();   
     }
 
     @Override
-    public String validar(DocumentoDTO dto) throws ValidationException {
-        return "valido";
+    public RestResponse<String> validar(DocumentoDTO dto) {
+        return ResponseBuilder.ok("valido").build();
     }
 } 

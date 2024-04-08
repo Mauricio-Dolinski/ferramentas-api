@@ -1,12 +1,12 @@
 package com.dolinski.mauricio.api.service;
 
-import com.dolinski.mauricio.api.controller.DocumentoDTO;
+import org.jboss.resteasy.reactive.RestResponse;
 
-import jakarta.validation.ValidationException;
+import com.dolinski.mauricio.api.dto.DocumentoDTO;
 
 
 
 public interface DocumentoService {
-    public String gerar();
-    public String validar(DocumentoDTO dto) throws ValidationException;
+    public RestResponse<String> gerar();
+    public RestResponse<String> validar(DocumentoDTO dto);
 }
