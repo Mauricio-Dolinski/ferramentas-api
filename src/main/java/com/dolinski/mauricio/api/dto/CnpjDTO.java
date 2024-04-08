@@ -27,7 +27,17 @@ public class CnpjDTO implements DocumentoDTO {
     public void parse() throws ValidationException {
 		String cnpj = this.numero;
 
-        //parse
+        cnpj = cnpj.trim();
+        if (cnpj.length() > 18) {
+            throw new ValidationException("CNPJ não é válido, deve conter 14 numeros.");
+        }
+        cnpj = cnpj.replaceAll("\\/", "");
+        cnpj = cnpj.replaceAll("\\.", "");
+        cnpj = cnpj.replaceAll("-", "");
+
+        if (cnpj.length() != 14 || !cnpj.matches("[0-9]+")){
+            throw new ValidationException("CNPJ não é válido, deve conter 14 numeros.");
+        }
 
         this.numero = cnpj;
     }

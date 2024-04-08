@@ -23,10 +23,10 @@ public class CnpjControllerTest {
     @Test
     public void deveriaValidarCnpj() {
         given()
-                .param("cnpj", "123")
+                .param("cnpj", "72.379.775/0001-20")
                 .when().post("/cnpj")
                 .then()
                 .statusCode(200)
-                .assertThat().body(containsString("valido"));
+                .assertThat().body(containsString("válido"));
     }
 } 
