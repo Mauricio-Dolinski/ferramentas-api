@@ -11,7 +11,28 @@ public class CnpjService implements DocumentoService {
 
     @Override
     public RestResponse<String> gerar() {
-        return ResponseBuilder.ok("gerado").build();
+        String cnpj = "";
+        int digito = 0;
+        int[] soma = new int[]{0, 0};
+        int[] peso = new int[]{6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+        
+
+        for (int i = 0; i < 12; i++) {
+            digito = (int) (Math.random() * 9);
+			soma[0] += digito * peso[i+1];
+			soma[1] += digito * peso[i];
+			cnpj += "" + digito;
+        }
+
+        for (int i = 0; i < 2; i++) {
+			digito = soma[i] % 11;
+			if ((digito == 0) || (digito == 1)) digito = 0;
+            else digito = 11 - digito;
+			cnpj += "" + digito;
+			if (i == 0) soma[1] += digito * 2;
+		}
+
+        return ResponseBuilder.ok(cnpj).build();
     }
 
     @Override
