@@ -35,6 +35,7 @@ public class CnpjService implements DocumentoService {
         char dig13, dig14;
         int soma, resto, digito, peso;
         String response = "";
+        Boolean valido = true;
 
         soma = 0;
         peso = 2;
@@ -53,8 +54,8 @@ public class CnpjService implements DocumentoService {
             dig13 = (char) ((11 - resto) + 48);
         
         if (dig13 != cnpj.charAt(12)) {
-            response = "CNPJ não é válido, digito verificador deveria começar com " + dig13 + ".";
-            return ResponseBuilder.ok(response).build();
+            valido = false;
+            cnpj = cnpj.substring(0, 12) + dig13 + cnpj.substring(13);
         }
 
         soma = 0;
@@ -74,7 +75,7 @@ public class CnpjService implements DocumentoService {
 
         
         String resultado = "" + dig13 + dig14;
-        if (dig14 == cnpj.charAt(13))
+        if (valido && dig14 == cnpj.charAt(13) )
             response = "CNPJ " + format(cnpj) + " é válido.";
         else{
             response = "CNPJ não é válido, digito verificador deveria ser " + resultado + ".";
