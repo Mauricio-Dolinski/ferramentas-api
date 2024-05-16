@@ -15,24 +15,25 @@ public class CnpjService implements DocumentoService {
         int digito = 0;
         int[] soma = new int[]{0, 0};
         int[] peso = new int[]{6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+
+        do{
+            for (int i = 0; i < 12; i++) {
+                digito = (int) (Math.random() * 9);
+                soma[0] += digito * peso[i+1];
+                soma[1] += digito * peso[i];
+                cnpj += "" + digito;
+            }
+        } while (cnpj.equals("000000000000"));
         
-
-        for (int i = 0; i < 12; i++) {
-            digito = (int) (Math.random() * 9);
-			soma[0] += digito * peso[i+1];
-			soma[1] += digito * peso[i];
-			cnpj += "" + digito;
-        }
-
         for (int i = 0; i < 2; i++) {
-			digito = soma[i] % 11;
-			if ((digito == 0) || (digito == 1)) digito = 0;
+            digito = soma[i] % 11;
+            if ((digito == 0) || (digito == 1)) digito = 0;
             else digito = 11 - digito;
-			cnpj += "" + digito;
-			if (i == 0) soma[1] += digito * 2;
-		}
-
-        return ResponseBuilder.ok(cnpj).build();
+            cnpj += "" + digito;
+            if (i == 0) soma[1] += digito * 2;
+        }
+        
+        return ResponseBuilder.ok(format(cnpj)).build();
     }
 
     @Override
@@ -46,11 +47,7 @@ public class CnpjService implements DocumentoService {
 
         String cnpj = dto.getNumero();
 
-        if (cnpj.equals("00000000000000") || cnpj.equals("11111111111111")
-                || cnpj.equals("22222222222222") || cnpj.equals("33333333333333")
-                || cnpj.equals("44444444444444") || cnpj.equals("55555555555555")
-                || cnpj.equals("66666666666666") || cnpj.equals("77777777777777")
-                || cnpj.equals("88888888888888") || cnpj.equals("99999999999999"))
+        if (cnpj.equals("00000000000000"))
             return ResponseBuilder.ok("CNPJ não é válido").build();
         
         char dig13, dig14;
