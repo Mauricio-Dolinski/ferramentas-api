@@ -9,31 +9,19 @@ import jakarta.validation.ValidationException;
 
 public class CnpjService implements DocumentoService {
 
+    private String cnpjValido = "";
+
     @Override
     public RestResponse<String> gerar() {
-        String cnpj = "";
-        int digito = 0;
-        int[] soma = new int[]{0, 0};
-        int[] peso = new int[]{6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+        cnpjValido = "";
 
-        do{
-            for (int i = 0; i < 12; i++) {
-                digito = (int) (Math.random() * 9);
-                soma[0] += digito * peso[i+1];
-                soma[1] += digito * peso[i];
-                cnpj += "" + digito;
-            }
-        } while (cnpj.equals("000000000000"));
-        
-        for (int i = 0; i < 2; i++) {
-            digito = soma[i] % 11;
-            if ((digito == 0) || (digito == 1)) digito = 0;
-            else digito = 11 - digito;
-            cnpj += "" + digito;
-            if (i == 0) soma[1] += digito * 2;
-        }
-        
-        return ResponseBuilder.ok(format(cnpj)).build();
+        int[] soma = somarDigitos("");
+
+        if (cnpjValido.equals("000000000000")) return gerar();
+
+        cnpjValido += gerarDigitosVerificadores(soma);
+
+        return ResponseBuilder.ok(format(cnpjValido)).build();
     }
 
     @Override
@@ -49,57 +37,55 @@ public class CnpjService implements DocumentoService {
 
         if (cnpj.equals("00000000000000"))
             return ResponseBuilder.ok("CNPJ não é válido").build();
-        
-        char dig13, dig14;
-        int soma, resto, digito, peso;
+
         String response = "";
-        Boolean valido = true;
+        int[] soma = somarDigitos(cnpj);
+        String digitosVerificadores = gerarDigitosVerificadores(soma);
 
-        soma = 0;
-        peso = 2;
-        for (int i = 12; i > 0; i--) {
-            digito = Integer.valueOf(cnpj.substring(i - 1, i)).intValue();
-            soma += (digito * peso);
-            peso++;
-            if (peso == 10)
-                peso = 2;
-        }
-
-        resto = soma % 11;
-        if ((resto == 0) || (resto == 1))
-            dig13 = '0';
-        else
-            dig13 = (char) ((11 - resto) + 48);
-        
-        if (dig13 != cnpj.charAt(12)) {
-            valido = false;
-            cnpj = cnpj.substring(0, 12) + dig13 + cnpj.substring(13);
-        }
-
-        soma = 0;
-        peso = 2;
-        for (int i = 13; i > 0; i--) {
-            digito = Integer.valueOf(cnpj.substring(i - 1, i)).intValue();
-            soma += (digito * peso);
-            peso++;
-            if (peso == 10)
-                peso = 2;
-        }
-        resto = soma % 11;
-        if ((resto == 0) || (resto == 1))
-            dig14 = '0';
-        else
-            dig14 = (char) ((11 - resto) + 48);
-
-        
-        String resultado = "" + dig13 + dig14;
-        if (valido && dig14 == cnpj.charAt(13) )
+        if (cnpj.substring(12).equals(digitosVerificadores)){
             response = "CNPJ " + format(cnpj) + " é válido.";
-        else{
-            response = "CNPJ não é válido, digito verificador deveria ser " + resultado + ".";
+        }
+        else {
+            response = "CNPJ não é válido, digito verificador deveria ser " + digitosVerificadores + ".";
+        }
+        
+        return ResponseBuilder.ok(response).build();
+    }
+
+    private int[] somarDigitos(String cnpj){
+        int digito = 0;
+        int[] soma = new int[]{0, 0};
+        int[] peso = new int[]{6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2};
+
+        for (int i = 0; i < 12; i++) {
+            if (cnpj.isEmpty()){
+                digito = (int) (Math.random() * 9);
+                cnpjValido += "" + digito;
+            }
+            else {
+                digito = Integer.valueOf(cnpj.substring(i, i+1)).intValue();
+            }
+            
+            soma[0] += digito * peso[i+1];
+            soma[1] += digito * peso[i];
         }
 
-        return ResponseBuilder.ok(response).build();
+        return soma;
+    }
+
+    private String gerarDigitosVerificadores(int[] soma){
+        String digitosVerificadores = "";
+        int digito = 0;
+        
+        for (int i = 0; i < 2; i++) {
+            digito = soma[i] % 11;
+            if ((digito == 0) || (digito == 1)) digito = 0;
+            else digito = 11 - digito;
+            digitosVerificadores += "" + digito;
+            if (i == 0) soma[1] += digito * 2;
+        }
+
+        return digitosVerificadores;
     }
 
     private String format(String cnpj){

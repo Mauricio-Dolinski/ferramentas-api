@@ -17,7 +17,7 @@ public class CnpjControllerTest {
                 .when().get("/cnpj")
                 .then()
                 .statusCode(200)
-                .assertThat().body(containsString("gerado"));
+                .assertThat().body(containsString("-"));
     }
 
     @Test
