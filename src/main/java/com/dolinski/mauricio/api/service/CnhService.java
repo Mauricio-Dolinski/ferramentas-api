@@ -8,10 +8,17 @@ import com.dolinski.mauricio.api.dto.DocumentoDTO;
 import jakarta.validation.ValidationException;
 
 public class CnhService implements DocumentoService {
+    private String cnhValido = "";
 
     @Override
     public RestResponse<String> gerar() {
-        return ResponseBuilder.ok("gerado").build();   
+        cnhValido = "";
+
+        int[] soma = somarDigitos("");
+
+        cnhValido += gerarDigitosVerificadores(soma);
+
+        return ResponseBuilder.ok(cnhValido).build(); 
     }
 
     @Override
@@ -49,7 +56,13 @@ public class CnhService implements DocumentoService {
         int[] soma = new int[]{0, 0};
 
         for (int i = 0; i < 9; i++, peso--) {
-            digito = Character.getNumericValue(cnh.charAt(i));
+            if (cnh.isEmpty()){
+                if (i == 0) digito = 0;
+                else digito = (int) (Math.random() * 9);
+                cnhValido += "" + digito;
+            }else {
+                digito = Character.getNumericValue(cnh.charAt(i));
+            }
             soma[0] += digito * peso;
             soma[1] += digito * (i+1);
         }

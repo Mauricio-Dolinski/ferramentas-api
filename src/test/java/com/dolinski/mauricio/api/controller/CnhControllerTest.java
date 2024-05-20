@@ -17,7 +17,7 @@ public class CnhControllerTest {
                 .when().get("/cnh")
                 .then()
                 .statusCode(200)
-                .assertThat().body(containsString("gerado"));
+                .assertThat().body(containsString("0"));
     }
 
     @Test
