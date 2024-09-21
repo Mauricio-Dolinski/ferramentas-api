@@ -137,8 +137,8 @@ public class CpfControllerTest {
                 .param("cpf", "111.111.111-11")
                 .when().post("/cpf")
                 .then()
-                .statusCode(200)
-                .assertThat().body(containsString("CPF não é válido"));
+                .statusCode(400)
+                .assertThat().body(containsString("CPF não é válido, todos os números são iguais."));
     }
 
     @Test
