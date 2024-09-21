@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.FormParam;
 
 public class CnpjDTO implements DocumentoDTO {
-    @NotBlank(message = "Campo cnpj não pode ser vazio")
+    @NotBlank(message = "CNPJ não pode ser vazio.")
     @FormParam("cnpj")
     String numero;
 

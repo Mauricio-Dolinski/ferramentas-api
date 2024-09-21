@@ -5,7 +5,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.ws.rs.FormParam;
 
 public class CpfDTO implements DocumentoDTO {
-    @NotBlank(message = "Campo cpf não pode ser vazio")
+    @NotBlank(message = "CPF não pode ser vazio.")
     @FormParam("cpf")
     String numero;
 
