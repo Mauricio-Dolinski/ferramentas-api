@@ -42,6 +42,10 @@ public class CpfDTO implements DocumentoDTO {
             throw new ValidationException("CPF não é válido, deve conter 11 numeros.");
         }
 
+        if (cpf.matches("(\\d)\\1{10}")) {
+            throw new ValidationException("CPF não é válido, todos os números são iguais.");
+        }
+
         this.numero = cpf;
     }
 }
