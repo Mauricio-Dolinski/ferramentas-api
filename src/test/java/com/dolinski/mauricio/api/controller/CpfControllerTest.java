@@ -1,13 +1,16 @@
 package com.dolinski.mauricio.api.controller;
 
-import io.quarkus.test.junit.QuarkusTest;
-
+import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.matchesPattern;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.RestAssured.*;
+import io.quarkus.test.junit.QuarkusTest;
 
 @QuarkusTest
 public class CpfControllerTest {
@@ -148,4 +151,67 @@ public class CpfControllerTest {
                 .then()
                 .statusCode(400);
     }
+
+    @Test
+    public void deveriaTratarCorretamenteComVariasRequisicoesConcorrentes() throws InterruptedException {
+        int numeroDeThreads = 50;
+        ExecutorService executor = Executors.newFixedThreadPool(numeroDeThreads);
+
+        for (int i = 0; i < numeroDeThreads; i++) {
+            executor.submit(() -> {
+                given()
+                    .when().get("/cpf")
+                    .then()
+                    .statusCode(200)
+                    .body(matchesPattern("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"));
+            });
+        }
+
+        executor.shutdown();
+        executor.awaitTermination(30, TimeUnit.SECONDS);
+    }
+
+    @Test
+    public void deveriaIgnorarParametrosExtrasNaRequisicaoGet() {
+        given()
+            .queryParam("extra", "parametro")
+            .when().get("/cpf")
+            .then()
+            .statusCode(200)
+            .body(matchesPattern("\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}"));
+    }
+
+    @Test
+    public void naoDeveriaValidarParametrosExtrasNaRequisicaoPost() {
+        given()
+            .param("cpf", "123.456.789-09")
+            .param("extra", "parametro")
+            .when().post("/cpf")
+            .then()
+            .statusCode(200)
+            .body(containsString("CPF 123.456.789-09 é válido."));
+    }
+
+    @Test
+    public void naoDeveriaValidarCpfVazio() {
+        given()
+            .param("cpf", "")
+            .when().post("/cpf")
+            .then()
+            .statusCode(400)
+            .assertThat().body(containsString("CPF não pode ser vazio."));
+    }
+
+    @Test
+    public void naoDeveriaValidarCpfComPayloadMuitoGrande() {
+        String cpfGrande = "1234567890".repeat(10); // 100 digits
+
+        given()
+            .param("cpf", cpfGrande)
+            .when().post("/cpf")
+            .then()
+            .statusCode(400)
+            .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros."));
+    }
+    
 }
