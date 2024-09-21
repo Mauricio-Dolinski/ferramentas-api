@@ -39,6 +39,10 @@ public class CnpjDTO implements DocumentoDTO {
             throw new ValidationException("CNPJ não é válido, deve conter 14 numeros.");
         }
 
+        if (cnpj.matches("(\\d)\\1{13}")) {
+            throw new ValidationException("CNPJ não é válido, todos os números são iguais.");
+        }
+
         this.numero = cnpj;
     }
 } 
