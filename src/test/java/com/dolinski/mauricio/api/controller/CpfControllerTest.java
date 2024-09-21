@@ -17,7 +17,7 @@ public class CpfControllerTest {
 
     
     @Test
-    public void deveriaGerarCpf() {
+    public void testGerarCpf() {
         given()
                 .when().get("/cpf")
                 .then()
@@ -26,7 +26,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void deveriaGerarCpfComFormatoValido() {
+    public void testGerarCpfComFormatoValido() {
         given()
                 .when().get("/cpf")
                 .then()
@@ -35,7 +35,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void deveriaValidarCpf() {
+    public void testValidarCpfValido() {
         given()
                 .param("cpf", "123.456.789-09")
                 .when().post("/cpf")
@@ -45,7 +45,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void deveriaValidarCpfComEspacos() {
+    public void testValidarCpfValidoComEspacos() {
         given()
                 .param("cpf", " 123.456.789-09 ")
                 .when().post("/cpf")
@@ -55,7 +55,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void deveriaValidarCpf2() {
+    public void testValidarCpfValidoSemPontuacao() {
         given()
                 .param("cpf", "12345678909")
                 .when().post("/cpf")
@@ -65,7 +65,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void deveriaValidarCpf3() {
+    public void testValidarCpfValidoSemZeroInicial() {
         given()
                 .param("cpf", "18.457.127-81")
                 .when().post("/cpf")
@@ -75,7 +75,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void naoDeveriaValidarCpfComDigitoVerificadorErrado() {
+    public void testRejeicaoCpfComDigitoVerificadorInvalido() {
         given()
                 .param("cpf", "12345678910")
                 .when().post("/cpf")
@@ -85,7 +85,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void naoDeveriaValidarCpfComMaisDeOnzeNumeros() {
+    public void testRejeicaoCpfComMaisDeOnzeDigitos() {
         given()
                 .param("cpf", "1098765432123456")
                 .when().post("/cpf")
@@ -95,7 +95,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void naoDeveriaValidarCpfComMenosDeOnzeNumeros() {
+    public void testRejeicaoCpfComMenosDeOnzeDigitos() {
         given()
                 .param("cpf", "123456")
                 .when().post("/cpf")
@@ -105,17 +105,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void naoDeveriaValidarCpf4() {
-        given()
-                .param("cpf", "abcdefghijk")
-                .when().post("/cpf")
-                .then()
-                .statusCode(400)
-                .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros."));
-    }
-
-    @Test
-    public void naoDeveriaValidarCpfComLetras() {
+    public void testRejeicaoCpfComLetras() {
         given()
                 .param("cpf", "123.456.78A-09")
                 .when().post("/cpf")
@@ -125,7 +115,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void naoDeveriaValidarCpfComCaracteresEspeciais() {
+    public void testRejeicaoCpfComCaracteresEspeciais() {
         given()
                 .param("cpf", "123.456.789-0@")
                 .when().post("/cpf")
@@ -135,7 +125,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void naoDeveriaValidarCpfComTodosNumerosIguais() {
+    public void testRejeicaoCpfComTodosNumerosIguais() {
         given()
                 .param("cpf", "111.111.111-11")
                 .when().post("/cpf")
@@ -145,7 +135,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void deveriaLidarComRequisicaoSemParametroCpf() {
+    public void testRequisicaoSemParametroCpf() {
         given()
                 .when().post("/cpf")
                 .then()
@@ -153,7 +143,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void deveriaTratarCorretamenteComVariasRequisicoesConcorrentes() throws InterruptedException {
+    public void testRequisicoesConcorrentes() throws InterruptedException {
         int numeroDeThreads = 50;
         ExecutorService executor = Executors.newFixedThreadPool(numeroDeThreads);
 
@@ -172,7 +162,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void deveriaIgnorarParametrosExtrasNaRequisicaoGet() {
+    public void testIgnorarParametrosExtrasNaRequisicaoGet() {
         given()
             .queryParam("extra", "parametro")
             .when().get("/cpf")
@@ -182,7 +172,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void naoDeveriaValidarParametrosExtrasNaRequisicaoPost() {
+    public void testIgnorarParametrosExtrasNaRequisicaoPost() {
         given()
             .param("cpf", "123.456.789-09")
             .param("extra", "parametro")
@@ -193,7 +183,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void naoDeveriaValidarCpfVazio() {
+    public void testRejeicaoCpfVazio() {
         given()
             .param("cpf", "")
             .when().post("/cpf")
@@ -203,7 +193,7 @@ public class CpfControllerTest {
     }
 
     @Test
-    public void naoDeveriaValidarCpfComPayloadMuitoGrande() {
+    public void testRejeicaoCpfComPayloadMuitoGrande() {
         String cpfGrande = "1234567890".repeat(10); // 100 digits
 
         given()
