@@ -32,6 +32,11 @@ public class CnhDTO implements DocumentoDTO {
         if (cnh.length() != 11 || !cnh.matches("[0-9]+")){
             throw new ValidationException("CNH não é válido, deve conter 11 numeros.");
         }
+
+        if (cnh.matches("(\\d)\\1{10}")) {
+            throw new ValidationException("CNH não é válido, todos os números são iguais.");
+        }
+        
         this.numero = cnh;
     }
 } 
