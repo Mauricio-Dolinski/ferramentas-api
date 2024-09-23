@@ -5,23 +5,25 @@ import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 import com.dolinski.mauricio.api.dto.DocumentoDTO;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 import jakarta.validation.ValidationException;
 
+@Named("cnpjService")
+@ApplicationScoped
 public class CnpjService implements DocumentoService {
-
-    private String cnpjValido = "";
 
     @Override
     public RestResponse<String> gerar() {
-        cnpjValido = "";
+        String cnpjGerado = gerarDigitos();
 
-        int[] soma = somarDigitos("");
+        int[] soma = somarDigitos(cnpjGerado);
 
-        if (cnpjValido.equals("000000000000")) return gerar();
+        if (cnpjGerado.equals("000000000000")) return gerar();
 
-        cnpjValido += gerarDigitosVerificadores(soma);
+        cnpjGerado += gerarDigitosVerificadores(soma);
 
-        return ResponseBuilder.ok(format(cnpjValido)).build();
+        return ResponseBuilder.ok(format(cnpjGerado)).build();
     }
 
     @Override
@@ -46,10 +48,22 @@ public class CnpjService implements DocumentoService {
             response = "CNPJ " + format(cnpj) + " é válido.";
         }
         else {
-            response = "CNPJ não é válido, digito verificador deveria ser " + digitosVerificadores + ".";
+            response = "CNPJ não é válido, dígito verificador deveria ser " + digitosVerificadores + ".";
         }
         
         return ResponseBuilder.ok(response).build();
+    }
+
+    private String gerarDigitos(){
+        String cnpjGerado = "";
+        int digito = 0;
+
+        for (int i = 0; i < 12; i++) {
+            digito = (int) (Math.random() * 9);
+            cnpjGerado += "" + digito;
+        }
+
+        return cnpjGerado;
     }
 
     private int[] somarDigitos(String cnpj){
@@ -59,8 +73,8 @@ public class CnpjService implements DocumentoService {
 
         for (int i = 0; i < 12; i++) {
             if (cnpj.isEmpty()){
-                digito = (int) (Math.random() * 9);
-                cnpjValido += "" + digito;
+                //digito = (int) (Math.random() * 9);
+                //cnpjValido += "" + digito;
             }
             else {
                 digito = Integer.valueOf(cnpj.substring(i, i+1)).intValue();

@@ -9,6 +9,9 @@ import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.*;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +74,7 @@ public class CnpjControllerTest {
                 .when().post("/cnpj")
                 .then()
                 .statusCode(200)
-                .assertThat().body(containsString("CNPJ não é válido, digito verificador deveria ser "));
+                .assertThat().body(containsString("CNPJ não é válido, dígito verificador deveria ser "));
     }
 
     @Test
@@ -172,5 +175,35 @@ public class CnpjControllerTest {
             .then()
             .statusCode(400)
             .assertThat().body(containsString("CNPJ não é válido, deve conter 14 numeros."));
+    }
+
+    @Test
+    public void testGerarEValidarCnpjsConcorrentemente() {
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        for (int i = 1; i <= 50; i++) {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                String cnpjGerado = given()
+                    .when().get("/cnpj")
+                    .then()
+                    .statusCode(200)
+                    .extract().asString();
+                System.out.println("CNPJ gerado: " + cnpjGerado);
+
+                given()
+                    .param("cnpj", cnpjGerado)
+                    .when().post("/cnpj")
+                    .then()
+                    .statusCode(200)
+                    .assertThat().body(containsString("CNPJ " + cnpjGerado + " é válido."));
+                
+            }, executor);
+
+            futures.add(future);
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        executor.shutdown();
     }
 }
