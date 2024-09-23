@@ -4,9 +4,10 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestResponse;
 
 import com.dolinski.mauricio.api.dto.CnhDTO;
-import com.dolinski.mauricio.api.service.CnhService;
 import com.dolinski.mauricio.api.service.DocumentoService;
 
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.BeanParam;
 import jakarta.ws.rs.GET;
@@ -17,7 +18,10 @@ import jakarta.ws.rs.Path;
 
 @Path("/cnh")
 public class CnhController {
-    private DocumentoService documento = new CnhService();
+
+    @Inject
+    @Named("cnhService")
+    private DocumentoService documento;
     
     @Tag(name="Gerador")
     @GET

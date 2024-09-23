@@ -6,6 +6,9 @@ import static io.restassured.RestAssured.*;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.matchesPattern;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -209,5 +212,35 @@ public class CnhControllerTest {
             .then()
             .statusCode(400)
             .assertThat().body(containsString("CNH não é válido, deve conter 11 numeros."));
+    }
+
+    @Test
+    public void testGerarEValidarCnhsConcorrentemente() {
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        for (int i = 1; i <= 50; i++) {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                String cnhGerado = given()
+                    .when().get("/cnh")
+                    .then()
+                    .statusCode(200)
+                    .extract().asString();
+                System.out.println("CNH gerado: " + cnhGerado);
+
+                given()
+                    .param("cnh", cnhGerado)
+                    .when().post("/cnh")
+                    .then()
+                    .statusCode(200)
+                    .assertThat().body(containsString("CNH " + cnhGerado + " é válido."));
+                
+            }, executor);
+
+            futures.add(future);
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        executor.shutdown();
     }
 }

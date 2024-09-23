@@ -5,20 +5,27 @@ import org.jboss.resteasy.reactive.RestResponse.ResponseBuilder;
 
 import com.dolinski.mauricio.api.dto.DocumentoDTO;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 import jakarta.validation.ValidationException;
 
+@Named("cnhService")
+@ApplicationScoped
 public class CnhService implements DocumentoService {
-    private String cnhValido = "";
 
     @Override
     public RestResponse<String> gerar() {
-        cnhValido = "";
+        String cnhGerado = gerarDigitos();
 
-        int[] soma = somarDigitos("");
+        int[] soma = somarDigitos(cnhGerado);
 
-        cnhValido += gerarDigitosVerificadores(soma);
+        cnhGerado += gerarDigitosVerificadores(soma);
 
-        return ResponseBuilder.ok(cnhValido).build(); 
+        if (cnhGerado.contains("-")){
+            return gerar();
+        }
+
+        return ResponseBuilder.ok(cnhGerado).build(); 
     }
 
     @Override
@@ -50,6 +57,19 @@ public class CnhService implements DocumentoService {
         return ResponseBuilder.ok(response).build();
     }
 
+    private String gerarDigitos(){
+        String cnhGerado = "";
+        int digito = 0;
+
+        for (int i = 0; i < 9; i++) {
+            if (i == 0) digito = 0;
+            else digito = (int) (Math.random() * 9);
+            cnhGerado += "" + digito;
+        }
+
+        return cnhGerado;
+    }
+
     private int[] somarDigitos(String cnh){
         int digito = 0;
         int peso = 9;
@@ -57,9 +77,9 @@ public class CnhService implements DocumentoService {
 
         for (int i = 0; i < 9; i++, peso--) {
             if (cnh.isEmpty()){
-                if (i == 0) digito = 0;
-                else digito = (int) (Math.random() * 9);
-                cnhValido += "" + digito;
+                //if (i == 0) digito = 0;
+                //else digito = (int) (Math.random() * 9);
+                //cnhValido += "" + digito;
             }else {
                 digito = Character.getNumericValue(cnh.charAt(i));
             }
