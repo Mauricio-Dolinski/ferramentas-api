@@ -6,16 +6,20 @@ import com.dolinski.mauricio.api.dto.DocumentoDTO;
 
 import org.jboss.resteasy.reactive.RestResponse;
 
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Named;
 import jakarta.validation.ValidationException;
 
-
+@Named("cpfService")
+@ApplicationScoped
 public class CpfService implements DocumentoService{
 
-	private int digito;
-	private int[] soma = new int[2];
+	
     
     @Override
     public RestResponse<String> gerar() {
+        int digito;
+		int[] soma = new int[2];
 		String cpf = "";
         digito = soma[0] = soma[1] = 0;
 
@@ -38,6 +42,8 @@ public class CpfService implements DocumentoService{
 
     @Override
     public RestResponse<String> validar(DocumentoDTO dto) {
+        int digito;
+		int[] soma = new int[2];
 
         try {
             dto.parse();

@@ -4,6 +4,9 @@ import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.matchesPattern;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -203,5 +206,50 @@ public class CpfControllerTest {
             .statusCode(400)
             .assertThat().body(containsString("CPF não é válido, deve conter 11 numeros."));
     }
-    
+
+    @Test
+    public void testGerarEValidarCpfsConcorrentemente() {
+        ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        List<CompletableFuture<Void>> futures = new ArrayList<>();
+
+        for (int i = 1; i <= 50; i++) {
+            CompletableFuture<Void> future = CompletableFuture.runAsync(() -> {
+                String cpfGerado = given()
+                    .when().get("/cpf")
+                    .then()
+                    .statusCode(200)
+                    .extract().asString();
+                System.out.println("CPF gerado: " + cpfGerado);
+
+                given()
+                    .param("cpf", cpfGerado)
+                    .when().post("/cpf")
+                    .then()
+                    .statusCode(200)
+                    .assertThat().body(containsString("CPF " + cpfGerado + " é válido."));
+                
+            }, executor);
+
+            futures.add(future);
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
+        executor.shutdown();
+    }
+
+    @Test
+    public void testGerarEValidarCpf() {
+        String cpfGerado = given()
+            .when().get("/cpf")
+            .then()
+            .statusCode(200)
+            .extract().asString();
+
+        given()
+            .param("cpf", cpfGerado)
+            .when().post("/cpf")
+            .then()
+            .statusCode(200)
+            .assertThat().body(containsString("CPF " + cpfGerado + " é válido."));
+    }
 }
